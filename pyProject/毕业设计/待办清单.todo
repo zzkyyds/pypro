@@ -1,0 +1,18 @@
+#1 总目标
+地图编辑器
+基础粒子群优化demo
+数据建模
+
+
+#2 数据建模
+数据集(Solomon数据集（1987年提出）和Gehring & Homberger)
+https://www.sintef.no/projectweb/top/vrptw/25-customers/
+时变车速（https://report.amap.com/index.do）
+读取数据
+数据编码
+数据解码
+初始化
+
+
+
+
