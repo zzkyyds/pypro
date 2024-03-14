@@ -1,0 +1,106 @@
+Particle Swarm Optimization, PSO
+Vehicle Routing Problem，VRP
+
+粒子群优化：
+https://blog.csdn.net/Wang_Dou_Dou_/article/details/119417078
+https://blog.csdn.net/zqx951102/article/details/89927955
+https://blog.csdn.net/weixin_40679412/article/details/80571854
+https://blog.csdn.net/qq_44384577/article/details/105699737
+https://blog.csdn.net/weixin_52026057/article/details/129203812
+https://zhuanlan.zhihu.com/p/673880257
+https://blog.csdn.net/qq_43523503/article/details/108962803
+https://zhuanlan.zhihu.com/p/425439560
+
+多目标粒子群优化：
+https://zhuanlan.zhihu.com/p/607688097
+https://www.cnblogs.com/fanyaochi/p/14612875.html
+https://zhuanlan.zhihu.com/p/651080846
+
+离散pso：
+https://blog.csdn.net/zj1131190425/article/details/101539261
+https://zhuanlan.zhihu.com/p/201027770
+
+多目标优化：
+https://zhuanlan.zhihu.com/p/54691447
+https://zhuanlan.zhihu.com/p/26436967
+https://blog.csdn.net/theonepiece/article/details/125653138
+https://blog.csdn.net/jodie123456/article/details/94874788
+https://www.cnblogs.com/Vae1990Silence/p/12716153.html
+https://blog.csdn.net/qq_20412595/article/details/129457083
+https://zhuanlan.zhihu.com/p/144807879
+https://blog.csdn.net/weixin_41458599/article/details/108997250
+
+车辆路径规划：
+https://zhuanlan.zhihu.com/p/277446894
+
+调研资料：
+https://www.ndrc.gov.cn/xwdt/ztzl/shwltj/qgsj/wap_index.html   全国数据-国家发展和改革委员会
+https://zhuanlan.zhihu.com/p/552149646  2022-2023年中国快递物流行业发展现状及典型案例研究报告
+https://tech.meituan.com/2020/02/20/meituan-delivery-operations-research.html 美团技术文章
+https://cloud.tencent.com/developer/article/1160117 苏宁
+https://xueqiu.com/8666823409/265553120 物流市场调研
+https://zhuanlan.zhihu.com/p/52983580 现存问题
+https://www.sohu.com/a/426709775_120178420 现状和问题
+https://zhuanlan.zhihu.com/p/337044678 问题
+
+可以参考：
+若干车辆路径规划问题的启发式优化算法研究   (论文复现 = https://blog.csdn.net/weixin_53924466/article/details/132612201 )
+基于烟花算法的混合车辆调度系统_邵海东
+时间依赖型绿色车辆路径模型及改进蚁群算法
+Matos SMR, Frota Y, Ochi LS. Green vehicle routing and scheduling problem with split delivery[J]. Electronic Notes in Discrete Mathematics, 2018, 69(8): 13-20.
+考虑客户满意度的车辆路径优化及其算法研究_罗明亮
+考虑顾客满意度的多目标车辆路径优化问题_吕垚远
+Discrete Particle Swarm Optimization, illustrated by the Traveling Salesman Problem
+菜鸟vrp  https://mp.weixin.qq.com/s?__biz=MzU2NDc1MTE3Mg==&mid=2247491670&idx=1&sn=c34fe60d6fbf8a3bb7c1a3f649be724e&chksm=fc449e7dcb33176bcd95ddfe38fe1df41f47db13a5aea53f8ea51e07077181812cb1efcc59ab&scene=21#wechat_redirect
+pso的vrp编码方式 https://mp.weixin.qq.com/s?__biz=MzU2NDc1MTE3Mg==&mid=2247491991&idx=1&sn=a92623b24a8a41b03774e6a3f410dadd&chksm=fc449fbccb3316aa5829c0079cccc433122bea8377afd5f3760c7b7a7390a8f5e849198dddca&scene=21#wechat_redirect
+粒子群，vrptw https://blog.csdn.net/m0_60703264/article/details/120714223
+自适应粒子群算法 https://github.com/doFighter/Computational-intelligence/blob/main/粒子群优化算法/自适应粒子群优化/自适应粒子群优化算法.md
+异构粒子群 
+拥堵系数，时变车速 https://report.amap.com/index.do
+多目标pso，帕累托  https://zhuanlan.zhihu.com/p/682474288
+
+
+群体智能算法：
+https://blog.csdn.net/HUST_zxs/article/details/119893514
+
+待查看：
+https://cdmd.cnki.com.cn/Article/CDMD-10594-1015031239.htm
+带软时间窗的车辆路径问题及其应用前景探讨
+考虑客户满意度的同时收发车辆路径问题
+基于改进粒子群算法的车辆路径问题研究
+基于动态需求的时间依赖型车辆配送路径问题研究
+改进天鹰算法求解时间依赖型车辆路径问题
+混沌映射在优化计算中的应用
+10.1016/J.ESWA.2023.120807
+10.2507/IJSIMM22-1-CO2
+10.1016/J.SWEVO.2023.101425
+10.1016/J.COMPAG.2022.106929
+10.1051/RO/2021119
+SOLVE THE CAPACITANCE VEHICLE ROUTING PROBLEM ( CVRP) USING THE TABU SEARCH ALGORITHM (TS) AND THE PARTICLE SWARM OPTIMIZATION WITH PRACTICAL APPLICATION.
+Particle Swarm Optimization; New Particle Swarm Optimization Study Findings Recently Were Reported by Researchers at University of Tehran (Modified particle swarm optimization in a time-dependent vehicle routing problem: minimizing fuel consumption)
+10.3390/MATH10193669
+
+
+关键词：
+绿波
+拥堵
+交通热力图
+时变车速热力图
+CVRPTW
+TDVRP
+VNS
+多目标
+容量约束
+最小费用
+软时间窗
+满意度（关于时间的函数）
+消融实验
+混沌映射
+
+思路：
+
+数据集：
+https://www.juliaopt.org/packages/
+https://blog.csdn.net/meiyoushui_/article/details/110367916
+http://comopt.ifi.uni-heidelberg.de/software/TSPLIB95/vrp/
+https://www.sintef.no/projectweb/top/vrptw/solomon-benchmark/
