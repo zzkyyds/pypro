@@ -63,8 +63,22 @@ class Particle:
     def encode(self):
         return None
 
-    def decode(self):
-        return None
+    def decode(self,position:list)->dict:
+        '''
+        解码器
+        '''
+        vechileRes={}
+
+        map= {}
+        for i,v in enumerate(position[0]):
+            if v not in map:
+                map[v] = []
+            map[v].append([i,position[1][i]])
+        for k,v in map.items():
+            v.sort(key=lambda x:x[1])
+            vechileRes[k] = [x[0] for x in v]
+
+        return vechileRes
 
 
 class PSO:
