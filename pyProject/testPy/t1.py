@@ -1,13 +1,6 @@
-import numpy as np
-from datetime import datetime
-from pytz import timezone
+with open("pyProject/tmp.txt", "r",encoding='utf-8') as f:
+    lines = f.readlines()
 
-a=np.array([1710237600000, 1710241200000, 1710244800000, 1710248400000, 1710252000000, 1710255600000, 1710259200000, 1710262800000, 1710266400000, 1710270000000, 1710273600000, 1710277200000, 1710280800000, 1710284400000, 1710288000000, 1710291600000, 1710295200000, 1710298800000, 1710302400000, 1710306000000, 1710309600000, 1710313200000, 1710316800000])
-
-# Convert the milliseconds to seconds by dividing by 1000
-a_seconds = a / 1000
-
-# Convert the seconds to datetime objects
-dates = [datetime.fromtimestamp(i) for i in a_seconds]
-
-print(dates[0])
+with open("pyProject/tmp.txt", "w",encoding='utf-8') as f:
+    for i, line in enumerate(lines, start=1):
+        f.write(f"[{i}] {line}")
