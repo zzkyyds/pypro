@@ -1,3 +1,6 @@
-a='  50          200'
-x,y=map(int, a.split())
-print(x,y)
+def a():
+    return 1,2
+def b(x,y):
+    return x,y
+
+print(b(*a()))

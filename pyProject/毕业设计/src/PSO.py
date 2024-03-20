@@ -60,44 +60,50 @@ class Particle:
         self.position[0] = np.mod(
             self.position[0], self.parameter['vehicleNum']).astype(int)
 
-    def encode(self):
-        return None
+    def encode(self, vechleRes: dict) -> list:
+        '''
+        编码器
+        '''
+        pass
 
-    def decode(self,position:list)->dict:
+    def decode(self, position: list) -> tuple[dict, list]:
         '''
         解码器
+        返回车辆路径和车辆出发时间
+        todo 时间解码没做
         '''
-        vechileRes={}
+        vehicleRes = {}
 
-        map= {}
-        for i,v in enumerate(position[0]):
+        map = {}
+        for i, v in enumerate(position[0]):
             if v not in map:
                 map[v] = []
-            map[v].append([i,position[1][i]])
-        for k,v in map.items():
-            v.sort(key=lambda x:x[1])
-            vechileRes[k] = [x[0] for x in v]
+            map[v].append([i, position[1][i]])
+        for k, v in map.items():
+            v.sort(key=lambda x: x[1])
+            vehicleRes[k] = [x[0] for x in v]
 
-        return vechileRes
+        return vehicleRes, position[2]
+    
+    def setScore(self, cost: float, satisfy: float):
+        self.cost = cost
+        self.satisfy = satisfy
 
 
 class PSO:
-    def __init__(self, dim, minx, maxx, n_particles):
-        self.particles = [Particle(dim, minx, maxx)
-                          for _ in range(n_particles)]
-        self.global_best = np.random.uniform(low=minx, high=maxx, size=dim)
-        self.global_best_score = -np.inf
+    def __init__(self, vehicleNum: int, capacity: int, customers: list[dict],
+                 particlesNum: int, optimizeFunction: callable[[dict, list], tuple[float, float]]):
+        self.particles = [Particle(vehicleNum, len(customers))
+                          for _ in range(particlesNum)]
+        self.global_best = []  # todo 初始化最佳解
 
-    def optimize(self, function, iterations):
+    def optimize(self, optimizeFunction: callable[[dict, list], tuple[float, float]], iterations):
         for _ in range(iterations):
             for particle in self.particles:
-                score = function(particle.position)
-                if score > particle.best_score:
-                    particle.best_score = score
-                    particle.best_position = np.copy(particle.position)
-                if score > self.global_best_score:
-                    self.global_best_score = score
-                    self.global_best = np.copy(particle.position)
+                cost, satisfy = function(*particle.decode(position=particle.position))
+                particle.setScore(cost, satisfy)
+                
+
             for particle in self.particles:
                 particle.update_velocity(self.global_best)
                 particle.update_position(self.minx, self.maxx)
