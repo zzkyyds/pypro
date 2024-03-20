@@ -95,15 +95,15 @@ class PSO:
                  particlesNum: int, optimizeFunction: callable[[dict, list], tuple[float, float]]):
         self.particles = [Particle(vehicleNum, len(customers))
                           for _ in range(particlesNum)]
-        self.global_best = []  # todo 初始化最佳解
+        self.global_best = []
 
     def optimize(self, optimizeFunction: callable[[dict, list], tuple[float, float]], iterations):
         for _ in range(iterations):
             for particle in self.particles:
-                cost, satisfy = function(*particle.decode(position=particle.position))
+                cost, satisfy = optimizeFunction(*particle.decode(position=particle.position))
                 particle.setScore(cost, satisfy)
-                
+
 
             for particle in self.particles:
                 particle.update_velocity(self.global_best)
-                particle.update_position(self.minx, self.maxx)
+                particle.update_position()

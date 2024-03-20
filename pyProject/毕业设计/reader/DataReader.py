@@ -1,5 +1,9 @@
+import math
 import numpy as np
 import pandas as pd
+import sys
+sys.path.append('pyProject/毕业设计/src')
+from drawer import drawXY
 
 
 
@@ -32,4 +36,9 @@ def readHumberger(file_path: str):
 
 
 
-print(readHumberger('data\homberger_200_customer_instances\RC2_2_10.TXT'))
+if __name__ == '__main__':
+    res=readHumberger('data\homberger_200_customer_instances\C2_2_7.TXT')
+    customers=res['customers']
+    distance=np.array([math.sqrt((customers[i]['x']-customers[0]['x'])**2+(customers[i]['y']-customers[0]['y'])**2) for i in range(len(customers))])
+    print(distance.mean())
+    print(distance.std())

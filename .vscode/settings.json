@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./pyProject/毕业设计/src"
+    ]
+}
