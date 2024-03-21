@@ -62,3 +62,7 @@ def read():
     filename = os.path.join(directory, f'{current_date}.json')
     with open(filename, 'r', encoding='utf-8') as f:
         data = json.load(f)
+
+
+if __name__ == '__main__':
+    spider()
