@@ -1,5 +1,6 @@
 import copy
 import numpy as np
+import FastNondominatedSort
 
 
 class Particle:
@@ -37,7 +38,7 @@ class Particle:
         self.velocity.append(np.random.rand(customerNum))
         self.velocity.append(np.random.rand(vehicleNum))
 
-        self.best_position = [copy.deepcopy(self.position)]
+        self.best_position = []
 
     # todo 优化对于多个最佳的学习 目前是随机选择，可选算法有轮盘赌
     def update_velocity(self, global_best: list, w=0.7, c1=1.4, c2=1.4):
@@ -47,9 +48,9 @@ class Particle:
             r1 = np.random.rand()
             r2 = np.random.rand()
             cognitive_velocity = c1 * r1 * \
-                (self.best_position[rc1][i] - self.position[i])
+                (self.best_position[rc1]['postion'][i] - self.position[i])
             social_velocity = c2 * r2 * \
-                (global_best[rc2][i] - self.position[i])
+                (global_best[rc2]['postion'][i] - self.position[i])
             self.velocity[i] = w * self.velocity[i] + \
                 cognitive_velocity + social_velocity
 
@@ -84,25 +85,69 @@ class Particle:
             vehicleRes[k] = [x[0] for x in v]
 
         return vehicleRes, position[2]
-    
-    def setScore(self, cost: float, satisfy: float):
+
+    def updateBest(self, cost: float, satisfy: float, dominateFunction):
+        '''
+        更新当前cost和satisfy
+        更新best
+        '''
         self.cost = cost
         self.satisfy = satisfy
+        
+        p = self.packagePosAndScore()
+
+        dominate=[x for x in self.best_position if dominateFunction(p,x)==1]
+        beDominate=[x for x in self.best_position if dominateFunction(p,x)==-1]
+
+        if len(beDominate)==0:
+            self.best_position.remove(dominate)
+            self.best_position.append(p)
+
+    def packagePosAndScore(self):
+        p = {}
+        p['position'] = copy.deepcopy(self.position)
+        p['cost'] = self.cost
+        p['satisfy'] = self.satisfy
+        return p
 
 
 class PSO:
-    def __init__(self, vehicleNum: int, capacity: int, customers: list[dict],
-                 particlesNum: int, optimizeFunction: callable[[dict, list], tuple[float, float]]):
+    def __init__(self, vehicleNum: int, capacity: int, customers: list[dict], roadCondition: list, maxSpeed: float,
+                 particlesNum: int):
+        '''
+        vehicleNum:车辆数
+        capacity:车辆容量
+        customers:顾客列表
+        roadCondition:道路条件,拥堵程度 每小时拥堵程度
+        maxSpeed:最大速度
+        particlesNum:粒子数
+        '''
         self.particles = [Particle(vehicleNum, len(customers))
                           for _ in range(particlesNum)]
         self.global_best = []
 
-    def optimize(self, optimizeFunction: callable[[dict, list], tuple[float, float]], iterations):
+        self.parameter = {'vehicleNum': vehicleNum,
+                          'capacity': capacity, 'customers': customers}
+
+    def optimize(self, optimizeFunction, dominateFunction, iterations):
+        '''
+        optimizeFunction:优化函数
+        dominateFunction:支配函数
+        iterations:迭代次数
+        '''
         for _ in range(iterations):
             for particle in self.particles:
-                cost, satisfy = optimizeFunction(*particle.decode(position=particle.position))
-                particle.setScore(cost, satisfy)
-
+                vehicleRes, departureTime = particle.decode(particle.position)
+                cost, satisfy = optimizeFunction(
+                    vehicleRes, departureTime, self.parameter['customers'], self.parameter['roadCondition'], self.parameter['maxSpeed'])
+                particle.updateBest(
+                    particle.position, cost, satisfy, dominateFunction)
+            
+            nonDominate=[x.packagePosAndScore() for x in self.particles]
+            nonDominate=FastNondominatedSort.fast_non_dominated_sort(nonDominate,dominateFunction)
+            self.global_best=self.global_best+nonDominate
+            self.global_best=FastNondominatedSort.fast_non_dominated_sort(self.global_best,dominateFunction)
+                
 
             for particle in self.particles:
                 particle.update_velocity(self.global_best)

@@ -1,4 +1,5 @@
 import math
+import itertools
 from PSO import Particle
 
 
@@ -6,9 +7,9 @@ def dominates(a: Particle, b: Particle):
     '''
     比较两个个体的支配关系
     '''
-    if a.cost < b.cost and a.satisfy > b.satisfy:
+    if a['cost'] < b['cost'] and a['satisfy'] > b['satisfy']:
         return 1
-    if a.cost > b.cost and a.satisfy < b.satisfy:
+    if a['cost'] > b['cost'] and a['satisfy'] < b['satisfy']:
         return -1
     return 0
 
@@ -25,6 +26,7 @@ def calScore(vehicleRes: dict, departureTime: list, customers: list, roadConditi
     return 计算得分=总成本,总满意度
 
     cost计算:时间车费（驾驶员工资，空调电费）+里程车费（油费）
+    satisfy计算:满意度=顾客到达时间-顾客要求到达时间
     '''
     cost = 0.0
     satisfy = 0.0
@@ -33,15 +35,17 @@ def calScore(vehicleRes: dict, departureTime: list, customers: list, roadConditi
     for k, v in vehicleRes.items():
         time = departureTime[k]
         nowPos = 0
-        for i in v:
-            time += math.sqrt((customers[i]['x']-customers[nowPos]['x'])**2+(
-                customers[i]['y']-customers[nowPos]['y'])**2)/maxSpeed
+        for i in itertools.chain(v, [0]):
+            distance = math.sqrt((customers[i]['x']-customers[nowPos]['x'])**2+(
+                customers[i]['y']-customers[nowPos]['y'])**2)
+            time += distance/maxSpeed
+            cost += distance
             if time < customers[i]['readyTime']:
                 time = customers[i]['readyTime']
             if time > customers[i]['dueDate']:
                 cost += (time-customers[i]['dueDate'])
+                satisfy += customers[i]['dueDate']-time
             time += customers[i]['serviceTime']
-
 
             nowPos = i
 

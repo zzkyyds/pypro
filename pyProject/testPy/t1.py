@@ -1,6 +1,7 @@
-def a():
-    return 1,2
-def b(x,y):
-    return x,y
+import itertools
 
-print(b(*a()))
+list1 = [1, 2, 3]
+list2 = ['a', 'b', 'c']
+
+
+print(list1+list2)

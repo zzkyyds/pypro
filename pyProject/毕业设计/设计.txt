@@ -1,4 +1,4 @@
-vrptw
+tdvrptw
 
 总体思路:
 初始化,使用logistics混沌算子
