@@ -1,28 +1,25 @@
-data = [
-    [1710237600000, 1.8],
-    [1710241200000, 1.48],
-    [1710244800000, 1.34],
-    [1710248400000, 1.28],
-    [1710252000000, 1.22],
-    [1710255600000, 1.17],
-    [1710259200000, 1.14],
-    [1710262800000, 1.12],
-    [1710266400000, 1.11],
-    [1710270000000, 1.1],
-    [1710273600000, 1.09],
-    [1710277200000, 1.1],
-    [1710280800000, 1.19],
-    [1710284400000, 1.66],
-    [1710288000000, 1.91],
-    [1710291600000, 1.65],
-    [1710295200000, 1.46],
-    [1710298800000, 1.35],
-    [1710302400000, 1.34],
-    [1710306000000, 1.41],
-    [1710309600000, 1.4],
-    [1710313200000, 1.42],
-    [1710316800000, 1.54]
-]
+import math
+import numpy as np
+from scipy.special import gamma
+import matplotlib.pyplot as plt
 
-extracted_numbers = [item[0] for item in data]
-print(extracted_numbers)
+x = np.arange(1,1000,0.1)
+y = []
+beta = 3/2
+alpha_u = math.pow((gamma(1+beta)*math.sin(math.pi*beta/2)/(gamma( ((1+beta)/2)*beta*math.pow(2,(beta-1)/2)) ) ),(1/beta))
+alpha_v = 1
+for t in x:
+    u = np.random.normal(0,alpha_u,1)
+    v = np.random.normal(0,alpha_v,1)
+    step = u / math.pow(abs(v),(1/beta))
+
+    y.append(abs(step[0]))
+
+plt.hist(y, bins=1000, edgecolor='black')
+plt.xlabel('Step Length')
+plt.ylabel('Frequency')
+plt.title('Distribution of Levy Flight Step Lengths')
+plt.grid(True)
+plt.show()
+
+

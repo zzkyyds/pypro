@@ -51,12 +51,31 @@ t(i，k) k车到i的时间
 
 
 
+数据集的数据单元命名：
+数据集名称：caseName
+车辆数量：vehicleNum
+车辆容量：vehicleCapacity
+客户集合：customers
+客户编号：cusNo
+客户坐标：x,y
+客户需求：demand
+客户硬时间窗：readyTime，dueDate
+客户软时间窗：wantTime1，wantTime2
+客户服务时间：serviceTime
+
+
+
+
+
 粒子：
 位置向量
 速度向量
 分数：成本，满意度
 个人最佳：list，需要包含pos向量和分数信息
 支配关系函数
+混沌映射算法：初始化
+kopt算法
+莱维飞行：更新的算法
 
 
 
@@ -71,4 +90,4 @@ copy函数：复制一个obj，但是排除特定的属性
 爬取高德信息函数：
 解析高德信息函数：放到mysql，然后写去除脏数据和获取拥堵关系
 数据解析函数：解析homberger和solomon数据集
-画图函数：每一代
+画图函数：每一代的分布，帕累托前沿
