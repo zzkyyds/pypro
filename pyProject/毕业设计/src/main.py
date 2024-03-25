@@ -35,7 +35,7 @@ def calScore(vehicleRes: dict, departureTime: list, customers: list, roadConditi
             if time < customers[i]['readyTime']:
                 time = customers[i]['readyTime']
             if time > customers[i]['dueDate']:
-                cost += (time-customers[i]['dueDate'])
+                # cost += (time-customers[i]['dueDate'])
                 satisfy += time-customers[i]['dueDate']
             time += customers[i]['serviceTime']
 

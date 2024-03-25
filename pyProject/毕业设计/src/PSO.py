@@ -28,6 +28,7 @@ class PSO:
         optimizeFunction:优化函数
         dominateFunction:支配函数
         iterations:迭代次数
+        draw,adaptiveCoordinates=是否开启绘画,是否采用自适应坐标轴
         '''
         if draw:
             plt.rcParams['font.sans-serif'] = ['SimHei']
@@ -61,19 +62,32 @@ class PSO:
             # 在 f1 上作图显示
             print(f"第{_+1}次进化,{len(self.global_best)}个最优")
             if draw:
-                scat1.set_offsets([[x.cost,x.satisfy] for x in self.particles])
+                pBest=[]
+                for p in self.particles:
+                    pBest+=p.best_position
+                scat1.set_offsets([[x.cost,x.satisfy] for x in pBest])
                 scat2.set_offsets([[x.cost,x.satisfy] for x in self.global_best])
                 axs.set_title(f"第{_+1}次进化")
 
                 if adaptiveCoordinates:
-                    all_positions = [[x.cost, x.satisfy] for x in self.particles + self.global_best]
-                    min_x = min(pos[0] for pos in all_positions)
-                    max_x = max(pos[0] for pos in all_positions)
-                    min_y = min(pos[1] for pos in all_positions)
-                    max_y = max(pos[1] for pos in all_positions)
+                    minx=0
+                    maxx=0.2
+                    all_positions = [[x.cost, x.satisfy] for x in pBest + self.global_best]
+                    num=len(all_positions)
+                    minx=int(minx*num)
+                    maxx=int(maxx*num)+1
 
-                    axs.set_xlim(min_x * 0.9, max_x * 1.1)
-                    axs.set_ylim(min_y * 0.9, max_y * 1.1)
+                    xl=sorted(all_positions,key=lambda x:x[0])
+                    xl=xl[minx:maxx]
+                    min_x = min(pos[0] for pos in xl)
+                    max_x = max(pos[0] for pos in xl)
+
+                    yl=sorted(all_positions,key=lambda x:x[1])
+                    min_y = min(pos[1] for pos in yl)
+                    max_y = max(pos[1] for pos in yl)
+
+                    axs.set_xlim(min_x * 0.9, max_x * 1.25)
+                    axs.set_ylim(min_y * 0.9, max_y * 1.25)
 
                 plt.legend()
                 plt.pause(0.1)

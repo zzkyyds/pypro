@@ -40,8 +40,8 @@ def test():
         u = np.random.normal(0, alpha_u, 1)
         v = np.random.normal(0, alpha_v, 1)
         step = u / math.pow(abs(v), (1/beta))
-
-        y.append(step[0])
+        r=step[0]
+        y.append(math.copysign(1,r)*math.log(abs(r)+1))
 
 
     plt.hist(y, bins=1000, edgecolor='black')

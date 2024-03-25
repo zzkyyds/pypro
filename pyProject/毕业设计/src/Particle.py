@@ -1,3 +1,4 @@
+import math
 import LevyFly
 import numpy as np
 import util
@@ -61,12 +62,17 @@ class Particle:
         return repr(res)
 
     # todo 优化对于多个最佳的学习 目前是随机选择，可选算法有轮盘赌
-    def update_velocity(self, global_best: list, w=0.7, c1=1.4, c2=1.4,beta=0.3):
+    def update_velocity(self, global_best: list, w=0.7, c1=1.4, c2=1.4,beta=0.1):
         rc1 = np.random.randint(0, len(self.best_position))
         rc2 = np.random.randint(0, len(global_best))
         for i in range(0, 3):
+
             r1 = LevyFly.levy(beta)
+            sign1=math.copysign(1, r1)
+            r1=sign1*math.log(abs(r1)+1)
             r2 = LevyFly.levy(beta)
+            sign2=math.copysign(1, r2)
+            r2=sign2*math.log(abs(r2)+1)
             cognitive_velocity = c1 * r1 * \
                 (self.best_position[rc1].position[i] - self.position[i])
             social_velocity = c2 * r2 * \
@@ -79,6 +85,8 @@ class Particle:
                          for i in range(0, 3)]
         self.position[0] = np.mod(
             self.position[0], self.parameter['vehicleNum']).astype(int)
+        self.position[2] = np.array([x if x > 0 else 0 for x in self.position[2]])
+
 
     def encode(self, vechleRes: dict) -> list:
         '''
@@ -126,3 +134,9 @@ class Particle:
             self.best_position = [
                 x for x in self.best_position if x not in dominate]
             self.best_position.append(p)
+
+    def kopt(self,kMax=5):
+        '''
+        k-opt
+        '''
+        pass
