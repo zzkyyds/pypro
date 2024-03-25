@@ -66,13 +66,18 @@ class Particle:
         rc1 = np.random.randint(0, len(self.best_position))
         rc2 = np.random.randint(0, len(global_best))
         for i in range(0, 3):
+            
+            #莱维飞行
+            # r1 = LevyFly.levy(beta)
+            # sign1=math.copysign(1, r1)
+            # r1=sign1*math.log(abs(r1)+1)
+            # r2 = LevyFly.levy(beta)
+            # sign2=math.copysign(1, r2)
+            # r2=sign2*math.log(abs(r2)+1)
 
-            r1 = LevyFly.levy(beta)
-            sign1=math.copysign(1, r1)
-            r1=sign1*math.log(abs(r1)+1)
-            r2 = LevyFly.levy(beta)
-            sign2=math.copysign(1, r2)
-            r2=sign2*math.log(abs(r2)+1)
+            #简单随机
+            r1=np.random.random()
+            r2=np.random.random()
             cognitive_velocity = c1 * r1 * \
                 (self.best_position[rc1].position[i] - self.position[i])
             social_velocity = c2 * r2 * \
