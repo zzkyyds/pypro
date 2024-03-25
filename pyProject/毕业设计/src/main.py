@@ -3,15 +3,7 @@ import itertools
 from PSO import Particle
 
 
-def dominates(a: Particle, b: Particle):
-    '''
-    比较两个个体的支配关系
-    '''
-    if a['cost'] < b['cost'] and a['satisfy'] > b['satisfy']:
-        return 1
-    if a['cost'] > b['cost'] and a['satisfy'] < b['satisfy']:
-        return -1
-    return 0
+
 
 
 def calScore(vehicleRes: dict, departureTime: list, customers: list, roadCondition: list, maxSpeed: float):
