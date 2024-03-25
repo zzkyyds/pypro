@@ -1,8 +1,5 @@
 import math
 import numpy as np
-import pandas as pd
-import sys
-sys.path.append('pyProject/毕业设计/src')
 from drawer import drawXY
 
 

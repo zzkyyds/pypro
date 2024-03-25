@@ -1,7 +1,6 @@
-import copy
+import LevyFly
 import numpy as np
 import util
-import FastNondominatedSort
 
 
 class Particle:
@@ -62,16 +61,16 @@ class Particle:
         return repr(res)
 
     # todo 优化对于多个最佳的学习 目前是随机选择，可选算法有轮盘赌
-    def update_velocity(self, global_best: list, w=0.7, c1=1.4, c2=1.4):
+    def update_velocity(self, global_best: list, w=0.7, c1=1.4, c2=1.4,beta=0.3):
         rc1 = np.random.randint(0, len(self.best_position))
         rc2 = np.random.randint(0, len(global_best))
         for i in range(0, 3):
-            r1 = np.random.rand()
-            r2 = np.random.rand()
+            r1 = LevyFly.levy(beta)
+            r2 = LevyFly.levy(beta)
             cognitive_velocity = c1 * r1 * \
-                (self.best_position[rc1].postion[i] - self.position[i])
+                (self.best_position[rc1].position[i] - self.position[i])
             social_velocity = c2 * r2 * \
-                (global_best[rc2].postion[i] - self.position[i])
+                (global_best[rc2].position[i] - self.position[i])
             self.velocity[i] = w * self.velocity[i] + \
                 cognitive_velocity + social_velocity
 

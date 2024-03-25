@@ -24,12 +24,19 @@ def dominates(a, b) -> int:
     '''
     if a.cost == b.cost and a.satisfy == b.satisfy:
         return 0
-    if a.cost <= b.cost and a.satisfy >= b.satisfy:
+    if a.cost <= b.cost and a.satisfy <= b.satisfy:
         return 1
-    if a.cost >= b.cost and a.satisfy <= b.satisfy:
+    if a.cost >= b.cost and a.satisfy >= b.satisfy:
         return -1
 
     return 0
+
+
+def getHybercube(bestList:list)->list:
+    '''
+    获取历史最优的超立方体分割,并且包含计数和粒子序数
+    '''
+    pass
 
 
 

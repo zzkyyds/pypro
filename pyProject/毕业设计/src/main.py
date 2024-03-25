@@ -25,7 +25,7 @@ def calScore(vehicleRes: dict, departureTime: list, customers: list, roadConditi
 
     # 计算每个车辆的成本和满意度
     for k, v in vehicleRes.items():
-        time = departureTime[k]
+        time = departureTime[k-1]
         nowPos = 0
         for i in itertools.chain(v, [0]):
             distance = math.sqrt((customers[i]['x']-customers[nowPos]['x'])**2+(
@@ -36,7 +36,7 @@ def calScore(vehicleRes: dict, departureTime: list, customers: list, roadConditi
                 time = customers[i]['readyTime']
             if time > customers[i]['dueDate']:
                 cost += (time-customers[i]['dueDate'])
-                satisfy += customers[i]['dueDate']-time
+                satisfy += time-customers[i]['dueDate']
             time += customers[i]['serviceTime']
 
             nowPos = i

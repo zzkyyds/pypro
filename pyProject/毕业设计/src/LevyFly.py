@@ -4,7 +4,7 @@ from scipy.special import gamma
 import matplotlib.pyplot as plt
 
 
-def levy(beta: float) -> float:
+def levy(beta: float=1) -> float:
     alpha_u = math.pow((gamma(1+beta)*math.sin(math.pi*beta/2) /
                        (gamma(((1+beta)/2)*beta*math.pow(2, (beta-1)/2)))), (1/beta))
     alpha_v = 1
@@ -15,7 +15,7 @@ def levy(beta: float) -> float:
     return step[0]
 
 
-def levyMulti(beta: float, count: int = 100) -> list[float]:
+def levyMulti(beta: float=1, count: int = 100) -> list[float]:
     alpha_u = math.pow((gamma(1+beta)*math.sin(math.pi*beta/2) /
                        (gamma(((1+beta)/2)*beta*math.pow(2, (beta-1)/2)))), (1/beta))
     alpha_v = 1
@@ -32,7 +32,7 @@ def levyMulti(beta: float, count: int = 100) -> list[float]:
 def test():
     x = np.arange(1, 1000, 0.1)
     y = []
-    beta = 1.5
+    beta = 2/3
     alpha_u = math.pow((gamma(1+beta)*math.sin(math.pi*beta/2) /
                        (gamma(((1+beta)/2)*beta*math.pow(2, (beta-1)/2)))), (1/beta))
     alpha_v = 1
@@ -41,7 +41,7 @@ def test():
         v = np.random.normal(0, alpha_v, 1)
         step = u / math.pow(abs(v), (1/beta))
 
-        y.append(math.log(abs(step[0])+1))
+        y.append(step[0])
 
 
     plt.hist(y, bins=1000, edgecolor='black')

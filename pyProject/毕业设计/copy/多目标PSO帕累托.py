@@ -121,7 +121,7 @@ class MOPSO:
                 self.scat4.set_offsets(self.objective_function(hypercube_particle))
                 self.ax.set_title(f"第{_+1}次进化")
                 plt.legend()
-                plt.pause(0.002)
+                plt.pause(0.01)
 
             self.update_repository()
             for i in range(self.swarm_size):
