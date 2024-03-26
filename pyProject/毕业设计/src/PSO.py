@@ -36,6 +36,7 @@ class PSO:
             fig, axs = plt.subplots()
             scat1 = axs.scatter([], [], c='b', marker='o', alpha=0.3, s=3, label="pbest")
             scat2 = axs.scatter([], [], c='r', marker='o', alpha=0.9, s=20, label="pareto")
+            scat3 = axs.scatter([], [], c='g', marker='o', alpha=0.3, s=3, label="now")
             axs.set_xlim(4e4,1.5e5)
             axs.set_ylim(4e4,1.5e5)
 
@@ -59,20 +60,22 @@ class PSO:
                 particle.update_position()
 
             #输出代际信息
-            # 在 f1 上作图显示
-            print(f"第{_+1}次进化,{len(self.global_best)}个最优")
+            costMin=min([x.cost for x in self.global_best])
+            sMin=min([x.satisfy for x in self.global_best])
+            print(f"第{_+1}次进化,{len(self.global_best)}个最优,最小cost={costMin},最小satisfy={sMin}")
             if draw:
                 pBest=[]
                 for p in self.particles:
                     pBest+=p.best_position
                 scat1.set_offsets([[x.cost,x.satisfy] for x in pBest])
                 scat2.set_offsets([[x.cost,x.satisfy] for x in self.global_best])
+                scat3.set_offsets([[x.cost,x.satisfy] for x in self.particles])
                 axs.set_title(f"第{_+1}次进化")
 
                 if adaptiveCoordinates:
                     minx=0
-                    maxx=0.2
-                    all_positions = [[x.cost, x.satisfy] for x in pBest + self.global_best]
+                    maxx=0.5
+                    all_positions = [[x.cost, x.satisfy] for x in self.global_best]
                     num=len(all_positions)
                     minx=int(minx*num)
                     maxx=int(maxx*num)+1
@@ -86,8 +89,8 @@ class PSO:
                     min_y = min(pos[1] for pos in yl)
                     max_y = max(pos[1] for pos in yl)
 
-                    axs.set_xlim(min_x * 0.9, max_x * 1.25)
-                    axs.set_ylim(min_y * 0.9, max_y * 1.25)
+                    axs.set_xlim(min_x * 0.8, max_x * 1.5)
+                    axs.set_ylim(min_y * 0.8, max_y * 1.5)
 
                 plt.legend()
                 plt.pause(0.1)

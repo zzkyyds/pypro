@@ -1,3 +1,6 @@
+import math
+
+
 def copyWithProp(obj: object, include: list = [], exclude: list = []) -> object:
     # 创建一个新的空对象
     new_obj = obj.__class__()
@@ -30,6 +33,10 @@ def dominates(a, b) -> int:
         return -1
 
     return 0
+
+
+def logAbsWithSign(x):
+    return math.copysign(1,x)*math.log(abs(x)+1)
 
 
 def getHybercube(bestList:list)->list:

@@ -8,13 +8,16 @@ import main
 
 def run():
     data = DataReader.readHumberger(
-        'data\homberger_200_customer_instances\C2_2_7.TXT')
+        'data\homberger_200_customer_instances\C2_2_8.TXT')
     scoreFunc = main.calScore
 
-    pso = PSO(data['vehicleNum'], data['vehicleCapacity'],
-              data['customers'], [1]*24, 20, 500)
-    pso.optimize(scoreFunc, dominates, 100,True,True)
+    pso = PSO(data['vehicleNum'], data['vehicleCapacity'], data['customers'],
+              roadCondition=[1]*24, maxSpeed=60, particlesNum=250)
+    pso.optimize(optimizeFunction=scoreFunc, dominateFunction=dominates,
+                 iterations=1000, draw=True, adaptiveCoordinates=True)
     for x in pso.global_best:
         print(x.toInfo())
+
+
 
 run()

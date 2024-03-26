@@ -1,5 +1,6 @@
 import math
 import numpy as np
+import util
 from scipy.special import gamma
 import matplotlib.pyplot as plt
 
@@ -32,7 +33,7 @@ def levyMulti(beta: float=1, count: int = 100) -> list[float]:
 def test():
     x = np.arange(1, 1000, 0.1)
     y = []
-    beta = 2/3
+    beta = 0.5
     alpha_u = math.pow((gamma(1+beta)*math.sin(math.pi*beta/2) /
                        (gamma(((1+beta)/2)*beta*math.pow(2, (beta-1)/2)))), (1/beta))
     alpha_v = 1
@@ -40,9 +41,7 @@ def test():
         u = np.random.normal(0, alpha_u, 1)
         v = np.random.normal(0, alpha_v, 1)
         step = u / math.pow(abs(v), (1/beta))
-        r=step[0]
-        y.append(math.copysign(1,r)*math.log(abs(r)+1))
-
+        y.append(util.logAbsWithSign(step[0]))
 
     plt.hist(y, bins=1000, edgecolor='black')
     plt.xlabel('Step Length')
