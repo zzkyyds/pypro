@@ -1,4 +1,6 @@
+from itertools import permutations, product
 import math
+import random
 
 
 def copyWithProp(obj: object, include: list = [], exclude: list = []) -> object:
@@ -36,14 +38,43 @@ def dominates(a, b) -> int:
 
 
 def logAbsWithSign(x):
-    return math.copysign(1,x)*math.log(abs(x)+1)
+    return math.copysign(1, x)*math.log(abs(x)+1)
 
 
-def getHybercube(bestList:list)->list:
+def getHybercube(bestList: list) -> list:
     '''
     获取历史最优的超立方体分割,并且包含计数和粒子序数
     '''
     pass
 
 
+def getRandomRangedInt(n, count: int):
+    '''
+    从[0,1,2,...,n-1]中无放回选取count个数字返回
+    如果元素不够,则返回所有元素
+    '''
+    if count >= n+1:
+        return list(range(0, n))
+    return random.sample(range(0, n), count)
 
+
+def allPermutationsReverseOrNot(arr: list[list])->list[list[list]]:
+    '''
+    获取数组的所有排列,并且有反转或者不反转
+    总计2^n*n!
+    '''
+    if len(arr) == 0:
+        return []
+    if len(arr) == 1:
+        return arr+[arr[0][::-1]]
+    # 太大了,不考虑
+    if len(arr) >= 6:
+        return []
+    res = []
+    eLen = len(arr[0])
+    per = list(permutations(arr))
+    binary = list(product([False, True], repeat=eLen))
+    for p in per:
+        for bList in binary:
+            res.append([x if b else x[::-1] for x,b in zip(p,bList)])
+    return res

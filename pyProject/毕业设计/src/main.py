@@ -6,7 +6,7 @@ from PSO import Particle
 
 
 
-def calScore(vehicleRes: dict, departureTime: list, customers: list, roadCondition: list, maxSpeed: float):
+def calScore(vehicleRes: dict, customers: list, roadCondition: list, maxSpeed: float):
     '''
     todo
 
@@ -25,9 +25,9 @@ def calScore(vehicleRes: dict, departureTime: list, customers: list, roadConditi
 
     # 计算每个车辆的成本和满意度
     for k, v in vehicleRes.items():
-        time = departureTime[k-1]
+        time = v["time"]
         nowPos = 0
-        for i in itertools.chain(v, [0]):
+        for i in itertools.chain(v["route"], [0]):
             distance = math.sqrt((customers[i]['x']-customers[nowPos]['x'])**2+(
                 customers[i]['y']-customers[nowPos]['y'])**2)
             time += distance/maxSpeed

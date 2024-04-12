@@ -5,7 +5,6 @@ import util
 
 
 class PSO:
-    # todo
     def __init__(self, vehicleNum: int, capacity: int, customers: list[dict], roadCondition: list, maxSpeed: float,
                  particlesNum: int):
         '''
@@ -42,9 +41,9 @@ class PSO:
 
         for _ in range(iterations):
             for particle in self.particles:
-                vehicleRes, departureTime = particle.decode(particle.position)
+                vehicleRes= particle.decode(particle.position)
                 cost, satisfy = optimizeFunction(
-                    vehicleRes, departureTime, self.parameter['customers'], self.parameter['roadCondition'], self.parameter['maxSpeed'])
+                    vehicleRes, self.parameter['customers'], self.parameter['roadCondition'], self.parameter['maxSpeed'])
                 particle.updateBest(cost, satisfy, dominateFunction)
 
             nonDominate = FastNondominatedSort.non_dominated_sort(

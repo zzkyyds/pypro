@@ -49,9 +49,9 @@ class Particle:
         return p
 
     def toInfo(self):
-        v, t = Particle.decode(self.position)
+        v = Particle.decode(self.position)
 
-        res = {"vehicle": v, "departureTime": t,
+        res = {"vehicle": v,
                "cost": self.cost, "satisfy": self.satisfy}
         return res
 
@@ -69,9 +69,9 @@ class Particle:
 
             # 莱维飞行
             r1 = LevyFly.levy(beta)
-            r1=util.logAbsWithSign(r1)
+            r1 = util.logAbsWithSign(r1)
             r2 = LevyFly.levy(beta)
-            r2=util.logAbsWithSign(r2)
+            r2 = util.logAbsWithSign(r2)
 
             # # 简单随机
             # r1 = np.random.random()
@@ -86,8 +86,10 @@ class Particle:
     def update_position(self):
         self.position = [self.position[i] + self.velocity[i]
                          for i in range(0, 3)]
-        self.position[0] = np.mod(self.position[0], self.parameter['vehicleNum']+1).astype(int)
-        self.position[0] = np.clip(self.position[0], 1, self.parameter['vehicleNum']).astype(int)
+        self.position[0] = np.mod(
+            self.position[0], self.parameter['vehicleNum']+1).astype(int)
+        self.position[0] = np.clip(
+            self.position[0], 1, self.parameter['vehicleNum']).astype(int)
         self.position[2] = np.array(
             [x if x > 0 else 0 for x in self.position[2]])
 
@@ -98,11 +100,13 @@ class Particle:
         pass
 
     @staticmethod
-    def decode(position: list) -> tuple[dict, list]:
+    def decode(position: list) -> dict:
         '''
         解码器
         返回车辆路径和车辆出发时间
         todo 时间解码没做
+
+        return:dict[route,time]
         '''
         vehicleRes = {}
 
@@ -114,9 +118,10 @@ class Particle:
             map[v].append([i+1, position[1][i]])
         for k, v in map.items():
             v.sort(key=lambda x: x[1])
-            vehicleRes[k] = [x[0] for x in v]
+            vehicleRes[k] = {"route": [x[0]
+                                       for x in v], "time": position[2][k-1]}
 
-        return vehicleRes, position[2]
+        return vehicleRes
 
     def updateBest(self, cost: float, satisfy: float, dominateFunction):
         '''
@@ -138,8 +143,54 @@ class Particle:
                 x for x in self.best_position if x not in dominate]
             self.best_position.append(p)
 
-    def kopt(self, kMax=5):
+    @staticmethod
+    def koptRoute(path: list, kMax=3)->list[list]:
         '''
         k-opt
+        有2^(k-1)*(k-1)!种可能
+
+        确保输入的route有足够的边用于切割
+        end.end和start.start链接,是同一个链,mid为其他链子
+
+        最底层元素为客户点
+        然后为总的路径
+        然后为所有可能路径
         '''
-        pass
+        res=[]
+
+        dilimeter = util.getRandomRangedInt(len(path)+1, kMax)
+        dilimeter.sort(reverse=True)
+        path = [0]+path+[0]
+        dilimeterRes=[]
+        for x in dilimeter:
+            dilimeterRes.append(path[x+1:])
+            path = path[:x+1]
+        start=dilimeterRes[0]
+        end=path
+        mid=dilimeterRes[1:]
+        all=util.allPermutationsReverseOrNot(mid)
+        for e in all:
+            nPath=[]
+            nPath.append(start)
+            for x in e:
+                nPath.append(x)
+            nPath.append(end)
+            res.append(nPath)
+        return res
+        
+
+
+    def koptCombine(self, kMax=3):
+        '''
+        使用kopt优化路径
+        '''
+        res={}
+        vehicleRes = Particle.decode(self.position)
+        for k, v in vehicleRes.items():
+            route = v['route']
+            time=v['time']
+            allRoute=Particle.koptRoute(route,kMax=kMax)
+            allVehicleRes=[{"route":a,"time":time} for a in allRoute]
+            res[k]=allVehicleRes
+        return res
+
