@@ -93,4 +93,6 @@ class PSO:
 
                 plt.legend()
                 plt.pause(0.1)
+        if draw:
+            plt.close()
             

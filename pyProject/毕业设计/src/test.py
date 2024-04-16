@@ -4,19 +4,22 @@ from util import dominates
 import DataReader
 import json
 import main
+import drawer
 
 
 def run():
     data = DataReader.readHumberger(
-        'data\homberger_200_customer_instances\C2_2_8.TXT')
+        'data\homberger_200_customer_instances\RC2_2_10 copy.TXT')
     scoreFunc = main.calScore
 
     pso = PSO(data['vehicleNum'], data['vehicleCapacity'], data['customers'],
-              roadCondition=[1]*24, maxSpeed=60, particlesNum=250)
+              roadCondition=[1]*24, maxSpeed=30, particlesNum=300)
     pso.optimize(optimizeFunction=scoreFunc, dominateFunction=dominates,
                  iterations=1000, draw=True, adaptiveCoordinates=True)
-    for x in pso.global_best:
-        print(x.toInfo())
+    res=pso.global_best[0]
+    v=Particle.decode(res.position)
+    drawer.drawTest(data['customers'],v,5)
+    print(v)
 
 
 

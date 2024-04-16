@@ -67,15 +67,15 @@ class Particle:
         rc2 = np.random.randint(0, len(global_best))
         for i in range(0, 3):
 
-            # 莱维飞行
-            r1 = LevyFly.levy(beta)
-            r1 = util.logAbsWithSign(r1)
-            r2 = LevyFly.levy(beta)
-            r2 = util.logAbsWithSign(r2)
+            # # 莱维飞行
+            # r1 = LevyFly.levy(beta)
+            # r1 = util.logAbsWithSign(r1)
+            # r2 = LevyFly.levy(beta)
+            # r2 = util.logAbsWithSign(r2)
 
-            # # 简单随机
-            # r1 = np.random.random()
-            # r2 = np.random.random()
+            # 简单随机
+            r1 = np.random.random()
+            r2 = np.random.random()
             cognitive_velocity = c1 * r1 * \
                 (self.best_position[rc1].position[i] - self.position[i])
             social_velocity = c2 * r2 * \
@@ -100,7 +100,7 @@ class Particle:
         pass
 
     @staticmethod
-    def decode(position: list) -> dict:
+    def decode(position: list) -> dict[dict]:
         '''
         解码器
         返回车辆路径和车辆出发时间
@@ -144,7 +144,7 @@ class Particle:
             self.best_position.append(p)
 
     @staticmethod
-    def koptRoute(path: list, kMax=3)->list[list]:
+    def koptRoute(path: list, kMax=3) -> list[tuple]:
         '''
         k-opt
         有2^(k-1)*(k-1)!种可能
@@ -156,41 +156,40 @@ class Particle:
         然后为总的路径
         然后为所有可能路径
         '''
-        res=[]
+        res = []
 
         dilimeter = util.getRandomRangedInt(len(path)+1, kMax)
         dilimeter.sort(reverse=True)
         path = [0]+path+[0]
-        dilimeterRes=[]
+        dilimeterRes = []
         for x in dilimeter:
             dilimeterRes.append(path[x+1:])
             path = path[:x+1]
-        start=dilimeterRes[0]
-        end=path
-        mid=dilimeterRes[1:]
-        all=util.allPermutationsReverseOrNot(mid)
+        start = path
+        end = dilimeterRes[0]
+        mid = dilimeterRes[1:]
+        all = util.allPermutationsReverseOrNot(mid)
         for e in all:
-            nPath=[]
-            nPath.append(start)
+            nPath = []
+            nPath += start
             for x in e:
-                nPath.append(x)
-            nPath.append(end)
+                nPath += x
+            nPath += end
+            nPath=tuple(nPath[1:-1])
             res.append(nPath)
+        res=list(set(res))
         return res
-        
 
-
-    def koptCombine(self, kMax=3):
+    def koptCombine(self, kMax=3) -> list[dict]:
         '''
         使用kopt优化路径
         '''
-        res={}
+        res = {}
         vehicleRes = Particle.decode(self.position)
         for k, v in vehicleRes.items():
             route = v['route']
-            time=v['time']
-            allRoute=Particle.koptRoute(route,kMax=kMax)
-            allVehicleRes=[{"route":a,"time":time} for a in allRoute]
-            res[k]=allVehicleRes
+            time = v['time']
+            allRoute = Particle.koptRoute(route, kMax=kMax)
+            allVehicleRes = [{"route": a, "time": time} for a in allRoute]
+            res[k] = allVehicleRes
         return res
-

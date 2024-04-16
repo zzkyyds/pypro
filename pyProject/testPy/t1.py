@@ -1,6 +1,3 @@
-import copy
-from itertools import permutations
-
-
-a=[6,3,9]
-print(list(permutations(a)))
+t = (3,)
+for x in t:
+    print(x)

@@ -71,9 +71,9 @@ def allPermutationsReverseOrNot(arr: list[list])->list[list[list]]:
     if len(arr) >= 6:
         return []
     res = []
-    eLen = len(arr[0])
+    n = len(arr)
     per = list(permutations(arr))
-    binary = list(product([False, True], repeat=eLen))
+    binary = list(product([False, True], repeat=n))
     for p in per:
         for bList in binary:
             res.append([x if b else x[::-1] for x,b in zip(p,bList)])
