@@ -15,7 +15,7 @@ def run():
     pso = PSO(data['vehicleNum'], data['vehicleCapacity'], data['customers'],
               roadCondition=[1]*24, maxSpeed=30, particlesNum=300)
     pso.optimize(optimizeFunction=scoreFunc, dominateFunction=dominates,
-                 iterations=1000, draw=True, adaptiveCoordinates=True)
+                 iterations=500, draw=True, adaptiveCoordinates=True)
     res=pso.global_best[0]
     v=Particle.decode(res.position)
     drawer.drawTest(data['customers'],v,5)

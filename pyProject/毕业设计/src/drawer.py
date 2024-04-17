@@ -34,7 +34,7 @@ def drawPath(xs: list, ys: list, paths: dict[dict], maxShow: int):
         p = [0]+path['route']+[0]
         xp = [xs[j] for j in p]
         yp = [ys[j] for j in p]
-        plt.plot(xp, yp, color=colors[num % len(colors)])
+        plt.plot(xp, yp, color=colors[(num-1) % len(colors)])
 
     plt.xlabel('X Coordinate')
     plt.ylabel('Y Coordinate')

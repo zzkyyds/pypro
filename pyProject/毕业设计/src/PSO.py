@@ -95,4 +95,25 @@ class PSO:
                 plt.pause(0.1)
         if draw:
             plt.close()
-            
+    
+    def koptScore(self,vehicleRess: dict[list[dict]],optimizeFunction,dominateFunction):
+        '''
+        计算kopt的分数并返回非支配解
+        '''
+        d={}
+        for k,v in vehicleRess.items():
+            scores=[optimizeFunction(x,self.parameter['customers'], self.parameter['roadCondition'], self.parameter['maxSpeed']) for x in v]
+            ps=[]
+            for x in scores:
+                e=Particle.createEmpty()
+                e.cost=x[0]
+                e.satisfy=x[1]
+                ps.append(e)
+            nonDomain=FastNondominatedSort.non_dominated_sort(ps, dominateFunction)
+            d[k]=nonDomain
+        #todo 计算所有组合的nonDomain
+
+
+
+
+

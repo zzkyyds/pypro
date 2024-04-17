@@ -48,6 +48,11 @@ class Particle:
 
         return p
 
+    @staticmethod
+    def createEmpty():
+        p = Particle()
+        return p
+
     def toInfo(self):
         v = Particle.decode(self.position)
 
@@ -180,9 +185,10 @@ class Particle:
         res=list(set(res))
         return res
 
-    def koptCombine(self, kMax=3) -> list[dict]:
+    def koptCombine(self, kMax=3) -> dict[list[dict]]:
         '''
         使用kopt优化路径
+        return: dict[list[dict]] 车辆编号->所有车辆路径的集合
         '''
         res = {}
         vehicleRes = Particle.decode(self.position)
