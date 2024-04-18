@@ -25,12 +25,21 @@ class Particle:
     '''
 
     def __init__(self):
+        '''
+        parameter:参数
+        position:位置
+        velocity:速度
+        best:最优位置 元素类型是自己
+        satisfy,cost:满足度,成本
+        tmp:临时变量
+        '''
         self.parameter = {}
         self.position = []
         self.velocity = []
         self.best_position = []
         self.satisfy = 0
         self.cost = 0
+        self.tmp = {}
 
     # todo 初始化考虑logistics混沌映射增加随机性
     @staticmethod
@@ -73,14 +82,14 @@ class Particle:
         for i in range(0, 3):
 
             # # 莱维飞行
-            # r1 = LevyFly.levy(beta)
-            # r1 = util.logAbsWithSign(r1)
-            # r2 = LevyFly.levy(beta)
-            # r2 = util.logAbsWithSign(r2)
+            r1 = LevyFly.levy(beta)
+            r1 = util.logAbsWithSign(r1)
+            r2 = LevyFly.levy(beta)
+            r2 = util.logAbsWithSign(r2)
 
             # 简单随机
-            r1 = np.random.random()
-            r2 = np.random.random()
+            # r1 = np.random.random()
+            # r2 = np.random.random()
             cognitive_velocity = c1 * r1 * \
                 (self.best_position[rc1].position[i] - self.position[i])
             social_velocity = c2 * r2 * \
@@ -98,11 +107,22 @@ class Particle:
         self.position[2] = np.array(
             [x if x > 0 else 0 for x in self.position[2]])
 
-    def encode(self, vechleRes: dict) -> list:
+    @staticmethod
+    def encode(parameter: dict,vechleRes: dict):
         '''
         编码器
         '''
-        pass
+        xv=[0]*parameter['customerNum']
+        xr=[0]*parameter['customerNum']
+        xt=[0]*parameter['vehicleNum']
+        for k,v in vechleRes.items():
+            route=v['route']
+            for i in range(len(route)):
+                xv[route[i]-1]=k
+                xr[route[i]-1]=i
+            xt[k-1]=v['time']
+        return [xv,xr,xt]
+        
 
     @staticmethod
     def decode(position: list) -> dict[dict]:
@@ -124,7 +144,7 @@ class Particle:
         for k, v in map.items():
             v.sort(key=lambda x: x[1])
             vehicleRes[k] = {"route": [x[0]
-                                       for x in v], "time": position[2][k-1]}
+                                       for x in v], "time": position[2][k-1], "vehicleNum": k}
 
         return vehicleRes
 
@@ -136,7 +156,7 @@ class Particle:
         self.cost = cost
         self.satisfy = satisfy
 
-        p = util.copyWithProp(self, include=['position', 'cost', 'satisfy'])
+        p = util.copyWithProp(self, include=['position', 'cost', 'satisfy','parameter'])
 
         dominate = [
             x for x in self.best_position if dominateFunction(p, x) == 1]
@@ -180,9 +200,9 @@ class Particle:
             for x in e:
                 nPath += x
             nPath += end
-            nPath=tuple(nPath[1:-1])
+            nPath = tuple(nPath[1:-1])
             res.append(nPath)
-        res=list(set(res))
+        res = list(set(res))
         return res
 
     def koptCombine(self, kMax=3) -> dict[list[dict]]:
@@ -196,6 +216,7 @@ class Particle:
             route = v['route']
             time = v['time']
             allRoute = Particle.koptRoute(route, kMax=kMax)
-            allVehicleRes = [{"route": a, "time": time} for a in allRoute]
+            allVehicleRes = [{"route": a, "time": time,
+                              "vehicleNum": k} for a in allRoute]
             res[k] = allVehicleRes
         return res

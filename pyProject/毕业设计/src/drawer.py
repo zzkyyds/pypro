@@ -54,4 +54,7 @@ def drawTest(customers: list, vehicleRes: dict[dict], maxShow: int = 3):
 
 
 if __name__ == '__main__':
-    drawXY([1, 2, 3], [6, 2, 3])
+    xs = [1, 20, 24, 32, 40, 64, 112, 160]
+    ys = [109455, 5453, 4591, 3502, 2732, 1750, 986, 774]
+    ks = [x*y for x, y in zip(xs, ys)]
+    drawXY(xs, ks)

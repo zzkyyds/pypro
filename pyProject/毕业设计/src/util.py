@@ -66,7 +66,7 @@ def allPermutationsReverseOrNot(arr: list[list])->list[list[list]]:
     if len(arr) == 0:
         return []
     if len(arr) == 1:
-        return arr+[arr[0][::-1]]
+        return [arr+[arr[0][::-1]]]
     # 太大了,不考虑
     if len(arr) >= 6:
         return []
@@ -78,3 +78,8 @@ def allPermutationsReverseOrNot(arr: list[list])->list[list[list]]:
         for bList in binary:
             res.append([x if b else x[::-1] for x,b in zip(p,bList)])
     return res
+
+
+if __name__ == '__main__':
+    arr=[[1]]
+    print(allPermutationsReverseOrNot(arr))
