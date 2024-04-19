@@ -30,10 +30,9 @@ def levyMulti(beta: float=1, count: int = 100) -> list[float]:
     return res
 
 
-def test():
+def test(beta=0.5):
     x = np.arange(1, 1000, 0.1)
     y = []
-    beta = 0.5
     alpha_u = math.pow((gamma(1+beta)*math.sin(math.pi*beta/2) /
                        (gamma(((1+beta)/2)*beta*math.pow(2, (beta-1)/2)))), (1/beta))
     alpha_v = 1
@@ -83,4 +82,4 @@ def show():
 
 
 if __name__ == '__main__':
-    test()
+    test(0.8)
