@@ -1,7 +1,15 @@
 from itertools import permutations, product
 import math
+import multiprocessing
 import random
 
+
+
+def getLogicCoreCount():
+    '''
+    获取逻辑核心数
+    '''
+    return multiprocessing.cpu_count()
 
 def copyWithProp(obj: object, include: list = [], exclude: list = []) -> object:
     # 创建一个新的空对象

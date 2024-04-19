@@ -1,7 +1,10 @@
+from itertools import islice, product
+import random
 from matplotlib import pyplot as plt
 from Particle import Particle
 import FastNondominatedSort
 import util
+import ThreadPoolUtil
 
 
 class PSO:
@@ -22,6 +25,7 @@ class PSO:
 
         self.parameter = {'vehicleNum': vehicleNum, 'capacity': capacity,
                           'customers': customers, 'roadCondition': roadCondition, 'maxSpeed': maxSpeed}
+        self.tp = ThreadPoolUtil.getThreadPool()
 
     def koptScore(self, particle: Particle, vehicleRess: dict[list[dict]], optimizeFunction, dominateFunction):
         '''
@@ -30,40 +34,74 @@ class PSO:
         para:
         vehicleRess=车辆编号->所有可能的路径(每一个路径由字典表示,包含route,time,vehicleNum)
         '''
+        def create_particle(iterator):
+            i,c=iterator
+            newP = Particle.createEmpty()
+            newP.cost = i.cost + c.cost
+            newP.satisfy = i.satisfy + c.satisfy
+            newP.tmp = {**i.tmp, **c.tmp}
+            return newP
+        def createParticleByList(l:list):
+            newP=Particle.createEmpty()
+            newP.cost = sum([i.cost for i in l])
+            newP.satisfy = sum([i.satisfy for i in l])
+            tmpD={}
+            for i in l:
+                tmpD.update(i.tmp)
+            newP.tmp=tmpD
+            return newP
+
+        def update_position(c1):
+            c1.position = c1.encode(particle.parameter, c1.tmp)
+            return c1
+
+        tp = self.tp
         d = {}
+        ps = []
         for k1, v1 in vehicleRess.items():
-            # scores = [optimizeFunction(x1, self.parameter['customers'], self.parameter['roadCondition'], self.parameter['maxSpeed']) for x1 in v1]
-            scores=[]
-            for x1 in v1:
-                scores.append(optimizeFunction({x1['vehicleNum']:x1}, self.parameter['customers'], self.parameter['roadCondition'], self.parameter['maxSpeed']))
-            ps = []
-            for x2 in range(len(scores)):
-                e = Particle.createEmpty()
-                e.cost = scores[x2][0]
-                e.satisfy = scores[x2][1]
-                e.tmp = {}
-                e.tmp[k1] = v1[x2]
-                ps.append(e)
-            d[k1] = FastNondominatedSort.non_dominated_sort(
-                ps, dominateFunction)
-        # todo 计算所有组合的nonDomain
-        combination = []
+            d[k1] = []
+            ps += v1
+        results = tp.map(lambda p: optimizeFunction(
+            {p['vehicleNum']: p}, self.parameter['customers'], self.parameter['roadCondition'], self.parameter['maxSpeed']), ps)
+        for i, (cost, satisfy) in enumerate(results):
+            e = Particle.createEmpty()
+            e.cost = cost
+            e.satisfy = satisfy
+            e.tmp = {}
+            vNum = ps[i]['vehicleNum']
+            e.tmp[vNum] = ps[i]
+            d[vNum].append(e)
+        results = tp.map(lambda item: {item[0]: FastNondominatedSort.non_dominated_sort(
+            item[1], dominateFunction)}, d.items())
+        d = {}
+        for r in results:
+            d.update(r)
+
+        combination=[]
         for k2, v2 in d.items():
-            ctmp = []
-            if len(combination)==0:
-                combination+=v2
+            if len(combination) == 0:
+                combination += v2
                 continue
-            for i in v2:
-                for c in combination:
-                    newP = Particle.createEmpty()
-                    newP.cost = i.cost+c.cost
-                    newP.satisfy = i.satisfy+c.satisfy
-                    newP.tmp = {**i.tmp, **c.tmp}
-                    ctmp.append(newP)
-            combination = FastNondominatedSort.non_dominated_sort(ctmp, dominateFunction)
-            combination=combination[0:20]
+            iteration = [(i, c) for i in v2 for c in combination]
+            results=list(tp.map(create_particle, iteration))
+            combination = FastNondominatedSort.non_dominated_sort(
+                results, dominateFunction)
+            combination = combination[0:40]
+
+
+        # countMax=100
+        # vs=d.values()
+        # combination = [list(comb) for comb in islice(product(*vs), countMax)]
+        # results=tp.map(lambda c:createParticleByList(c),combination)
+        # combination = FastNondominatedSort.non_dominated_sort(list(results), dominateFunction)
+
         for c1 in combination:
             c1.position = c1.encode(particle.parameter, c1.tmp)
+
+        results = tp.map(update_position, combination)
+        for r in results:
+            pass
+
         return combination
 
     def optimize(self, optimizeFunction, dominateFunction, iterations, draw=False, adaptiveCoordinates=False):
@@ -88,30 +126,42 @@ class PSO:
             axs.set_xlim(4e4, 1.5e5)
             axs.set_ylim(4e4, 1.5e5)
 
+            tp = self.tp
+
         for _ in range(iterations):
-            for particle in self.particles:
-                vehicleRes = particle.decode(particle.position)
-                cost, satisfy = optimizeFunction(
-                    vehicleRes, self.parameter['customers'], self.parameter['roadCondition'], self.parameter['maxSpeed'])
-                particle.updateBest(cost, satisfy, dominateFunction)
+            results = tp.map(lambda p: optimizeFunction(p.decode(p.position),
+                                                        self.parameter['customers'],
+                                                        self.parameter['roadCondition'],
+                                                        self.parameter['maxSpeed']),
+                             self.particles)
+            for ii, (cost, satisfy) in enumerate(results):
+                self.particles[ii].updateBest(cost, satisfy, dominateFunction)
 
             nonDominate = FastNondominatedSort.non_dominated_sort(
                 self.particles, dominateFunction)
             nonDominate = [util.copyWithProp(
-                x, include=['position', 'cost', 'satisfy','parameter']) for x in nonDominate]
+                x, include=['position', 'cost', 'satisfy', 'parameter']) for x in nonDominate]
             self.global_best = self.global_best+nonDominate
             self.global_best = FastNondominatedSort.non_dominated_sort(
                 self.global_best, dominateFunction)
             for gb in self.global_best:
+                if gb.koptCount>30:
+                    continue
+                gb.koptCount+=1
                 vress = gb.koptCombine()
-                kopts=self.koptScore(gb, vress, optimizeFunction, dominateFunction)
-                self.kopt+=kopts
+                kopts = self.koptScore(
+                    gb, vress, optimizeFunction, dominateFunction)
+                self.kopt += kopts
             self.kopt = FastNondominatedSort.non_dominated_sort(
                 self.kopt, dominateFunction)
 
-            for particle in self.particles:
-                particle.update_velocity(self.global_best)
-                particle.update_position()
+            results = tp.map(lambda p: p.update_velocity(
+                self.global_best), self.particles)
+            for result in results:
+                pass
+            results = tp.map(lambda p: p.update_position(), self.particles)
+            for result in results:
+                pass
 
             # 输出代际信息
             costMin = min([x.cost for x in self.kopt])
@@ -148,8 +198,8 @@ class PSO:
                     min_y = min(pos[1] for pos in yl)
                     max_y = max(pos[1] for pos in yl)
 
-                    axs.set_xlim(min_x * 0.8, max_x * 1.5)
-                    axs.set_ylim(min_y * 0.8, max_y * 1.5)
+                    axs.set_xlim(min_x * 0.8-1e3, max_x * 1.5+1e3)
+                    axs.set_ylim(min_y * 0.8-1e3, max_y * 1.5+1e3)
 
                 plt.legend()
                 plt.pause(0.1)

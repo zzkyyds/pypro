@@ -25,16 +25,14 @@ def drawPath(xs: list, ys: list, paths: dict[dict], maxShow: int):
     '''
     colors = ['#66ccff', 'green', 'yellow', 'black',
               'pink', 'orange', 'purple', 'brown', 'gray']
-    plt.scatter(xs[0], ys[0], color='red', label='First Point')  # 第一个点用红色
-    plt.scatter(xs[1:], ys[1:], color='blue', label='Other Points')  # 其他点用蓝色
-    for num, path in paths.items():
-        if maxShow < 0:
-            continue
-        maxShow -= 1
-        p = [0]+path['route']+[0]
+    plt.scatter(xs[0], ys[0], color='red', label='仓库')  # 第一个点用红色
+    plt.scatter(xs[1:], ys[1:], color='blue', label='客户')  # 其他点用蓝色
+    ps=list(paths.values())
+    for i in range(min(len(ps),maxShow)):
+        p = [0]+ps[i]['route']+[0]
         xp = [xs[j] for j in p]
         yp = [ys[j] for j in p]
-        plt.plot(xp, yp, color=colors[(num-1) % len(colors)])
+        plt.plot(xp, yp, color=colors[(i) % len(colors)])
 
     plt.xlabel('X Coordinate')
     plt.ylabel('Y Coordinate')

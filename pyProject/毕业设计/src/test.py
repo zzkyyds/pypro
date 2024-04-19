@@ -16,7 +16,7 @@ def run():
     pso = PSO(data['vehicleNum'], data['vehicleCapacity'], data['customers'],
               roadCondition=[1]*24, maxSpeed=30, particlesNum=300)
     pso.optimize(optimizeFunction=scoreFunc, dominateFunction=dominates,
-                 iterations=500, draw=True, adaptiveCoordinates=True)
+                 iterations=1, draw=True, adaptiveCoordinates=True)
     res=pso.kopt
     res.sort(key=lambda x:x.satisfy)
     # res.sort(key=lambda x:x.cost)
@@ -28,4 +28,5 @@ def run():
 
 
 
-run()
+if __name__=='__main__':
+    run()

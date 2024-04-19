@@ -1,6 +1,5 @@
 import math
 import itertools
-from PSO import Particle
 
 
 

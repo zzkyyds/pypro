@@ -39,7 +39,9 @@ class Particle:
         self.best_position = []
         self.satisfy = 0
         self.cost = 0
+        self.isKopt=False
         self.tmp = {}
+        self.koptCount=0
 
     # todo 初始化考虑logistics混沌映射增加随机性
     @staticmethod
@@ -82,14 +84,14 @@ class Particle:
         for i in range(0, 3):
 
             # # 莱维飞行
-            r1 = LevyFly.levy(beta)
-            r1 = util.logAbsWithSign(r1)
-            r2 = LevyFly.levy(beta)
-            r2 = util.logAbsWithSign(r2)
+            # r1 = LevyFly.levy(beta)
+            # r1 = util.logAbsWithSign(r1)
+            # r2 = LevyFly.levy(beta)
+            # r2 = util.logAbsWithSign(r2)
 
             # 简单随机
-            # r1 = np.random.random()
-            # r2 = np.random.random()
+            r1 = np.random.random()
+            r2 = np.random.random()
             cognitive_velocity = c1 * r1 * \
                 (self.best_position[rc1].position[i] - self.position[i])
             social_velocity = c2 * r2 * \
@@ -205,7 +207,7 @@ class Particle:
         res = list(set(res))
         return res
 
-    def koptCombine(self, kMax=3) -> dict[list[dict]]:
+    def koptCombine(self, kMax=5) -> dict[list[dict]]:
         '''
         使用kopt优化路径
         return: dict[list[dict]] 车辆编号->所有车辆路径的集合
