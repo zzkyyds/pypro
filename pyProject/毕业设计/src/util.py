@@ -4,12 +4,12 @@ import multiprocessing
 import random
 
 
-
 def getLogicCoreCount():
     '''
     获取逻辑核心数
     '''
     return multiprocessing.cpu_count()
+
 
 def copyWithProp(obj: object, include: list = [], exclude: list = []) -> object:
     # 创建一个新的空对象
@@ -29,18 +29,26 @@ def copyWithProp(obj: object, include: list = [], exclude: list = []) -> object:
             setattr(new_obj, attr_name, getattr(obj, attr_name))
 
     return new_obj
-
+EPSILON=1e-6
+def compare(a,b)->int:
+    if abs(a-b)<EPSILON:
+        return 0
+    if a<b:
+        return -1
+    return 1
 
 def dominates(a, b) -> int:
     '''
     比较两个个体的支配关系
     '''
-    if a.cost == b.cost and a.satisfy == b.satisfy:
+    c=compare(a.cost,b.cost)
+    s=compare(a.satisfy,b.satisfy)
+    if c==0 and s==0:
         return 0
-    if a.cost <= b.cost and a.satisfy <= b.satisfy:
-        return 1
-    if a.cost >= b.cost and a.satisfy >= b.satisfy:
+    if c>=0 and s>=0:
         return -1
+    if c<=0 and s<=0:
+        return 1
 
     return 0
 
@@ -66,7 +74,7 @@ def getRandomRangedInt(n, count: int):
     return random.sample(range(0, n), count)
 
 
-def allPermutationsReverseOrNot(arr: list[list])->list[list[list]]:
+def allPermutationsReverseOrNot(arr: list[list]) -> list[list[list]]:
     '''
     获取数组的所有排列,并且有反转或者不反转
     总计2^n*n!
@@ -84,10 +92,10 @@ def allPermutationsReverseOrNot(arr: list[list])->list[list[list]]:
     binary = list(product([False, True], repeat=n))
     for p in per:
         for bList in binary:
-            res.append([x if b else x[::-1] for x,b in zip(p,bList)])
+            res.append([x if b else x[::-1] for x, b in zip(p, bList)])
     return res
 
 
 if __name__ == '__main__':
-    arr=[[1]]
+    arr = [[1]]
     print(allPermutationsReverseOrNot(arr))

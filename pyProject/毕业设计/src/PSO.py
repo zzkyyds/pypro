@@ -27,7 +27,7 @@ class PSO:
                           'customers': customers, 'roadCondition': roadCondition, 'maxSpeed': maxSpeed}
         self.tp = ThreadPoolUtil.getThreadPool()
 
-    def koptScore(self, particle: Particle, vehicleRess: dict[list[dict]], optimizeFunction, dominateFunction,countMax=100):
+    def koptScore(self, particle: Particle, vehicleRess: dict[list[dict]], optimizeFunction, dominateFunction,countMax=200):
         '''
         计算kopt的分数并返回非支配解
 
@@ -155,7 +155,7 @@ class PSO:
                 self.kopt, dominateFunction)
 
             results = tp.map(lambda p: p.update_velocity(
-                self.global_best), self.particles)
+                self.kopt), self.particles)
             for result in results:
                 pass
             results = tp.map(lambda p: p.update_position(), self.particles)
@@ -166,7 +166,7 @@ class PSO:
             costMin = min([x.cost for x in self.kopt])
             sMin = min([x.satisfy for x in self.kopt])
             print(
-                f"第{_+1}次进化,{len(self.global_best)}个最优,{len(self.kopt)}个kopt,最小cost={costMin},最小satisfy={sMin}")
+                f"第{_+1}次进化,{len(self.global_best)}个帕累托,{len(self.kopt)}个kopt,最小cost={costMin},最小satisfy={sMin}")
             if draw:
                 pBest = []
                 for p in self.particles:

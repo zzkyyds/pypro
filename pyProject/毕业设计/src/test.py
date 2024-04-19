@@ -10,7 +10,7 @@ import drawer
 def run():
     # 'data\homberger_200_customer_instances\RC2_2_10 copy.TXT'
     data = DataReader.readHumberger(
-        'data\homberger_200_customer_instances\RC2_2_10.TXT')
+        'data\homberger_200_customer_instances\RC2_2_9.TXT')
     scoreFunc = main.calScore
 
     pso = PSO(data['vehicleNum'], data['vehicleCapacity'], data['customers'],
@@ -23,7 +23,7 @@ def run():
     # res=res[len(res)//2]
     res=res[0]
     v=Particle.decode(res.position)
-    drawer.drawTest(data['customers'],v,5)
+    drawer.drawTest(data['customers'],v,4)
     print(res.toInfo())
 
 
