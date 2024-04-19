@@ -27,7 +27,7 @@ class PSO:
                           'customers': customers, 'roadCondition': roadCondition, 'maxSpeed': maxSpeed}
         self.tp = ThreadPoolUtil.getThreadPool()
 
-    def koptScore(self, particle: Particle, vehicleRess: dict[list[dict]], optimizeFunction, dominateFunction):
+    def koptScore(self, particle: Particle, vehicleRess: dict[list[dict]], optimizeFunction, dominateFunction,countMax=100):
         '''
         计算kopt的分数并返回非支配解
 
@@ -86,10 +86,9 @@ class PSO:
             results=list(tp.map(create_particle, iteration))
             combination = FastNondominatedSort.non_dominated_sort(
                 results, dominateFunction)
-            combination = combination[0:40]
+            combination = combination[0:countMax]
 
 
-        # countMax=100
         # vs=d.values()
         # combination = [list(comb) for comb in islice(product(*vs), countMax)]
         # results=tp.map(lambda c:createParticleByList(c),combination)
@@ -104,7 +103,7 @@ class PSO:
 
         return combination
 
-    def optimize(self, optimizeFunction, dominateFunction, iterations, draw=False, adaptiveCoordinates=False):
+    def optimize(self, optimizeFunction, dominateFunction, iterations, draw=False, adaptiveCoordinates=False,kopt=5,kCount=30):
         '''
         optimizeFunction:优化函数
         dominateFunction:支配函数
@@ -145,10 +144,10 @@ class PSO:
             self.global_best = FastNondominatedSort.non_dominated_sort(
                 self.global_best, dominateFunction)
             for gb in self.global_best:
-                if gb.koptCount>30:
+                if gb.koptCount>kCount:
                     continue
                 gb.koptCount+=1
-                vress = gb.koptCombine()
+                vress = gb.koptCombine(kMax=kopt)
                 kopts = self.koptScore(
                     gb, vress, optimizeFunction, dominateFunction)
                 self.kopt += kopts
