@@ -10,6 +10,7 @@ https://blog.csdn.net/weixin_52026057/article/details/129203812
 https://zhuanlan.zhihu.com/p/673880257
 https://blog.csdn.net/qq_43523503/article/details/108962803
 https://zhuanlan.zhihu.com/p/425439560
+综述 https://pbking1.github.io/blog/2014/04/07/something-about-pso-algorithm/
 
 多目标粒子群优化：
 https://zhuanlan.zhihu.com/p/607688097
