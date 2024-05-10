@@ -9,14 +9,15 @@ import drawer
 
 def run():
     # 'data\homberger_200_customer_instances\RC2_2_10 copy.TXT'
+    # 'data\homberger_200_customer_instances\RC2_2_9.TXT'
     data = DataReader.readHumberger(
         'data\homberger_200_customer_instances\RC2_2_9.TXT')
     scoreFunc = main.calScore
 
     pso = PSO(data['vehicleNum'], data['vehicleCapacity'], data['customers'],
-              roadCondition=[1]*24, maxSpeed=30, particlesNum=300)
+              roadCondition=[1]*24, maxSpeed=30, particlesNum=30)
     pso.optimize(optimizeFunction=scoreFunc, dominateFunction=dominates,
-                 iterations=500, draw=True, adaptiveCoordinates=True)
+                 iterations=50, draw=True, adaptiveCoordinates=True,kopt=3,kCount=2)
     res=pso.kopt
     res.sort(key=lambda x:x.satisfy)
     # res.sort(key=lambda x:x.cost)
