@@ -34,6 +34,17 @@ def logisticsSineChaos(miu:float,seed:float,count:int)->np.ndarray:
         zeros[i]=miu*zeros[i-1]*(1-zeros[i-1])+(4-miu)*np.sin(np.pi*zeros[i-1])/4
     return zeros
 
+
+def CubicChaos(miu:float,seed:float,count:int)->np.ndarray:
+    '''
+    x(n+1)=miu*x(n)(1-x(n)^2)
+    '''
+    zeros=np.zeros(count)
+    zeros[0]=seed
+    for i in range(1,count):
+        zeros[i]=miu*zeros[i-1]*(1-zeros[i-1]**2)
+    return zeros
+
 def LogisticMap():
     mu = np.arange(0.0001, 4, 0.0001)
     x = 0.2  # 初值
@@ -60,6 +71,6 @@ def show(nd:np.ndarray):
 
 
 if __name__=='__main__':
-    LogisticMap()
-    # logistics=logisticsChaos(1,0.6,100)
-    # show(logistics)
+    # LogisticMap()
+    logistics=logisticsSineChaos(3.831,0.6,100)
+    show(logistics)

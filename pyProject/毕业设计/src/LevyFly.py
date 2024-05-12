@@ -40,7 +40,8 @@ def test(beta=0.5):
         u = np.random.normal(0, alpha_u, 1)
         v = np.random.normal(0, alpha_v, 1)
         step = u / math.pow(abs(v), (1/beta))
-        y.append(util.logAbsWithSign(step[0]))
+        # y.append(util.logAbsWithSign(step[0]))
+        y.append(step[0])
 
     plt.hist(y, bins=1000, edgecolor='black')
     plt.xlabel('Step Length')
@@ -55,9 +56,9 @@ def show():
     ys = [0]
     x = 0
     y = 0
-    for i in range(999):
+    for i in range(100):
         xita = math.pi*2*abs(np.random.random())
-        l = levy(2)
+        l = levy(6)
         x += l*math.cos(xita)
         y += l*math.sin(xita)
         xs.append(x)
@@ -82,4 +83,5 @@ def show():
 
 
 if __name__ == '__main__':
-    test(0.8)
+    # show()
+    test(0.1)
