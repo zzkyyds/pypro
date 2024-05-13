@@ -40,8 +40,8 @@ def test(beta=0.5):
         u = np.random.normal(0, alpha_u, 1)
         v = np.random.normal(0, alpha_v, 1)
         step = u / math.pow(abs(v), (1/beta))
-        # y.append(util.logAbsWithSign(step[0]))
-        y.append(step[0])
+        y.append(util.logAbsWithSign(step[0]))
+        # y.append(step[0])
 
     plt.hist(y, bins=1000, edgecolor='black')
     plt.xlabel('Step Length')

@@ -1,21 +1,41 @@
-[1] 罗梓瑄，杨杰庆，刘学文. 基于 NSGA-II 的考虑客户满意度的多目标车辆路径问题研究[J]. 重庆师范大学学报：自然科学版，2020，37(6)：13-17.
-[2] N. Mladenovic, P. Hansen, Variable neighborhood search, Comput. Oper.Res. 24 (11) (1997) 1097–1100.
-[3] T. Barthélemy, A. Rossi, M. Sevaux, K. Sörensen, Metaheuristic approach for the clustered VRP, in: EU/ME 2010—10th Anniversary of the Metaheuristic Community, Lorient, France, 2010.
-[4] 徐慧英，赵建民，张泳，等. 改进 NSGA-II 算法在车辆路径多目标优化问题中的应用[J]. 计算机工程与科学，2010，32(10)：117-121.
-[5] 郭世凯, 孙鑫. 基于改进粒子群算法的移动机器人路径规划[J]. 电子测量技术, 2019, 42(03): 54-58.
-[6] Y.Shi, R. Eberhart. A modified particle swarm optimizer [C]. IEEE World Congress on Computational Intelligence, Anchorage, Alaska, 1998: 69-73.
-[7] J. J. Liang, A. K. Qin, P. N. Suganthan, et al. Comprehensive learning particle swarm optimizer for global optimization of multimodal functions[J]. IEEE transactions on evolutionary computation, 2006, 10(3): 281-295.
-[8] 熊伟.车辆路径问题建模与多目标进化算法的研究与分析[J].科学技术创新,2018(32): 28- 29
-[9] M.U. Farooq, A. Ahmad, A. Hameed. Opposition-based initialization and a modified pattern for Inertia Weight (IW) in PSO[C]. 2017 IEEE International Conference on Innovations in Intelligent Systems and Applications (INISTA). IEEE, 2017: 96-101.
-[10] G.Spavieri, D. L. Cavalca, R. A. S. Fernandes, et al. An adaptive individual inertia weight based on best, worst and individual particle performances for the PSO algorithm[C]. International Conference on Artificial Intelligence and Soft Computing. Springer, Cham, 2018: 536-547.
-[11] J.Liu, X. Zhang, A. Ning. Hybrid optimization algorithm of PSO and ABC[J]. Computer Engineering & Applications, 2011, 1(6): 226-229.
-[12] 夏学文, 刘经南, 高柯夫, 李元香, 曾辉. 具备反向学习和局部学习能力的粒子群算法[J]. 计算机学报, 2015, 38(07): 1397-1407.
-[13] 王征, 张俊, 王旭坪. 多车场带时间窗车辆路径问题的变邻域搜索算法[J]. 中国管理科学, 2011, 19(2): 99-109.
-[14] Vidal T, Laporte G, Matl P. A concise guide to existing and emerging vehicle routing problem variants[J]. European Journal of Operational Research, 2020, 286(2): 401-416.
-[15] Messaoud E. A chance constrained programming model and an improved large neighborhood search algorithm for the electric vehicle routing problem with stochastic travel times[J]. Evolutionary Intelligence, 2023, 16(1): 153-168.
-[16] Yu Z, Zhang P, Yu Y, et al. An adaptive large neighborhood search for the larger-scale instances of green vehicle routing problem with time windows[J]. Complexity, 2020, 2020: 1-14.
-[17] 李英, 张鹏威, 吴一帆. 电动汽车/传统汽车混合车队车辆配置及路径优化模型[J]. 系统管理学报, 2020, 29(03): 522-531.
-[18] 李进, 张江华. 基于碳排放与速度优化的带时间窗车辆路径问题[J]. 系统工程理论与实践, 2014, 34(12): 3063-3072.
-[19] Solomon MM. Algorithms for the vehicle routing problem with time window constraints[J]. Operations Research, 1987, 35(2): 254-265.
-[20] Demir E, Bektas T, Laporte G. A comparative analysis of several vehicle emission models for road freight transportation[J]. Transportation Research Part D: Transport & Environment, 2011, 16: 347-357.
-[21] 南丽君,陈彦如,张宗成.改进的自适应大规模邻域搜索算法求解动态需求的混合车辆路径 问题[J].计算机应用研究,2021,38(10):2926-2934.
+    Begin
+        读取数据集
+        初始化参数
+        使用混沌映射算法初始化种群
+        初始化画布
+        for i in range(0,G):
+            for 粒子 in 种群:
+                计算粒子花费和满意度
+                粒子历史最佳=粒子历史最佳+粒子
+                粒子历史最佳=非支配集（粒子历史最佳）
+            全局历史最佳=粒子群+全局历史最佳
+            全局历史最佳=非支配集（全局历史最佳）
+            for 最佳粒子 in 全局历史最佳:
+                if(最佳粒子.kopt次数<最大kopt次数):
+                    最佳粒子.kopt次数++
+                    kopt集合=kopt集合+kopt(最佳粒子)
+    End
+
+
+    Begin
+        传入解
+        路径信息数组=解的解码
+        车辆路径优化结果集=[]
+        for 车辆路径 in 路径信息数组：
+            路径分段数组=车辆路径的随机切割
+            路径分段数组=路径分段数组的全排列
+            路径分段数组=路径分段数组的随机翻转
+            for 组合结果 in 路径分段数组：
+                计算消耗与满意度
+            路径分段数组=非支配集（路径分段数组）
+            车辆路径优化结果集+=路径分段数组
+        车辆路径优化组合=[]
+        for 车辆路径优化结果 in 车辆路径优化结果集：
+            车辆路径优化组合*=车辆路径优化结果
+            车辆路径优化组合=非支配集（车辆路径优化组合）
+            车辆路径优化组合=车辆路径优化组合.sublist(0,最大搜索宽度)
+        return 车辆路径优化组合
+    End
+
+
+        

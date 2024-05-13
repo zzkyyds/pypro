@@ -176,7 +176,7 @@ class PSO:
                                   for x in self.global_best])
                 scat3.set_offsets([[x.cost, x.satisfy]
                                   for x in self.particles])
-                scat4.set_offsets([[x.cost, x.satisfy] for x in self.kopt])
+                # scat4.set_offsets([[x.cost, x.satisfy] for x in self.kopt])
                 axs.set_title(f"第{_+1}次进化")
 
                 if adaptiveCoordinates:

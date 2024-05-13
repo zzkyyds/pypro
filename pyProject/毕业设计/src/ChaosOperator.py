@@ -72,5 +72,5 @@ def show(nd:np.ndarray):
 
 if __name__=='__main__':
     # LogisticMap()
-    logistics=logisticsSineChaos(3.831,0.6,100)
+    logistics=logisticsSineChaos(3.831,0.33,100)
     show(logistics)
